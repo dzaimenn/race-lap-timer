@@ -1,19 +1,19 @@
 package git.foxminded.dzaimenko;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class RacingResultPrinter {
 
-    public void printRacingResults(List<Racer> sortedRacers) {
-        int rank = 1;
-        for (Racer racer : sortedRacers) {
-            String formattedOutput = String.format("%d. %-20s | %-30s | %s",
-                    rank++,
-                    racer.getNameRacer(),
-                    racer.getTeamRacing(),
-                    formatLapTime(racer.getLapTime()));
-            System.out.println(formattedOutput);
-        }
+    private int maxLengthNameRacer;
+    private int maxLengthNameTeam;
+
+    public List<Racer> sortRacersByLapTime(Map<String, Racer> racers) {
+        return racers.values().stream()
+                .sorted(Comparator.comparing(Racer::getLapTime))
+                .collect(Collectors.toList());
     }
 
     private String formatLapTime(long lapTime) {
@@ -24,5 +24,36 @@ public class RacingResultPrinter {
 
         return String.format("%d:%02d.%03d", minutes, seconds, milliseconds);
     }
+
+    private void nameMaxLength(List<Racer> sortedRacers) {
+        maxLengthNameRacer = sortedRacers.stream()
+                .map(racer -> racer.getNameRacer().length())
+                .max(Integer::compare)
+                .orElse(0);
+
+    }
+
+    private void teamMaxLength(List<Racer> sortedRacers) {
+        maxLengthNameTeam = sortedRacers.stream()
+                .map(racer -> racer.getTeamRacing().length())
+                .max(Integer::compare)
+                .orElse(0);
+    }
+
+    public void printRacingResults(List<Racer> sortedRacers) {
+        nameMaxLength(sortedRacers);
+        teamMaxLength(sortedRacers);
+
+        int rank = 1;
+        for (Racer racer : sortedRacers) {
+            String formattedOutput = String.format("%3d. %-" + maxLengthNameRacer + "s | %-" + maxLengthNameTeam + "s | %s",
+                    rank++,
+                    racer.getNameRacer(),
+                    racer.getTeamRacing(),
+                    formatLapTime(racer.getLapTime()));
+            System.out.println(formattedOutput);
+        }
+    }
+
 
 }

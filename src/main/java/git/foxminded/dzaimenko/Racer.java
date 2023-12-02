@@ -15,10 +15,6 @@ public class Racer {
         this.teamRacing = teamRacing;
     }
 
-    public String getAbbreviation() {
-        return abbreviation;
-    }
-
     public String getNameRacer() {
         return nameRacer;
     }

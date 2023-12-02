@@ -8,10 +8,8 @@ public class RacingMain {
         RacersData racersData = new RacersData();
         racersData.startRacersData();
 
-        RacersSorter racersSorter = new RacersSorter();
-        List<Racer> sortedRacers = racersSorter.sortRacersByLapTime(racersData.getRacers());
-
         RacingResultPrinter resultPrinter = new RacingResultPrinter();
+        List<Racer> sortedRacers = resultPrinter.sortRacersByLapTime(racersData.getRacers());
         resultPrinter.printRacingResults(sortedRacers);
 
 
