@@ -12,6 +12,6 @@ public class RacingMain {
         List<Racer> sortedRacers = resultPrinter.sortRacersByLapTime(racersData.getRacers());
         resultPrinter.printRacingResults(sortedRacers);
 
-
     }
+
 }

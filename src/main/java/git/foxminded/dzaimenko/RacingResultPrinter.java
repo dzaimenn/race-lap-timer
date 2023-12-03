@@ -52,8 +52,11 @@ public class RacingResultPrinter {
                     racer.getTeamRacing(),
                     formatLapTime(racer.getLapTime()));
             System.out.println(formattedOutput);
+
+            if (rank == 16) {
+                System.out.println("-".repeat(70));
+            }
         }
     }
-
 
 }
