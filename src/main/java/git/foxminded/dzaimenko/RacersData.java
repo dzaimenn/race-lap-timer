@@ -11,8 +11,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RacersData {
-
-    private Map<String, Racer> racers;
+    private static final String ABBREVIATIONS_FILE = "abbreviations.txt";
+    private static final String START_TIME_FILE = "start.log";
+    private static final String END_TIME_FILE = "end.log";
+    private final Map<String, Racer> racers;
 
     public Map<String, Racer> getRacers() {
         return racers;
@@ -28,8 +30,8 @@ public class RacersData {
         return time.getTime();
     }
 
-    private void loadRacersData(String abbreviationsFileName) throws IOException {
-        try (InputStream is = RacingMain.class.getClassLoader().getResourceAsStream(abbreviationsFileName);
+    private void loadRacersData() throws IOException {
+        try (InputStream is = RacingMain.class.getClassLoader().getResourceAsStream(RacersData.ABBREVIATIONS_FILE);
              BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
             reader.lines()
                     .map(line -> line.split("_"))
@@ -37,8 +39,8 @@ public class RacersData {
         }
     }
 
-    private void loadStartTime(String startTimeFileName) throws Exception {
-        try (InputStream is = RacingMain.class.getClassLoader().getResourceAsStream(startTimeFileName);
+    private void loadStartTime() throws Exception {
+        try (InputStream is = RacingMain.class.getClassLoader().getResourceAsStream(RacersData.START_TIME_FILE);
              BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
             reader.lines()
                     .forEach(line -> {
@@ -53,8 +55,8 @@ public class RacersData {
         }
     }
 
-    private void loadEndTime(String endTimeFileName) throws Exception {
-        try (InputStream is = RacingMain.class.getClassLoader().getResourceAsStream(endTimeFileName);
+    private void loadEndTime() throws Exception {
+        try (InputStream is = RacingMain.class.getClassLoader().getResourceAsStream(RacersData.END_TIME_FILE);
              BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
             reader.lines()
                     .forEach(line -> {
@@ -72,9 +74,9 @@ public class RacersData {
     public void startRacersData() {
         try {
 
-            loadRacersData("abbreviations.txt");
-            loadStartTime("start.log");
-            loadEndTime("end.log");
+            loadRacersData();
+            loadStartTime();
+            loadEndTime();
 
         } catch (Exception e) {
             e.printStackTrace();
