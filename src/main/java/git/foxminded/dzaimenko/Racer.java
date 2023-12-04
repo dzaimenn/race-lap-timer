@@ -32,6 +32,9 @@ public class Racer {
     }
 
     public void setEndTime(long endTime) {
+        if (endTime < startTime) {
+            throw new IllegalArgumentException("End time cannot be before start time");
+        }
         this.endTime = endTime;
         setLapTime();
     }

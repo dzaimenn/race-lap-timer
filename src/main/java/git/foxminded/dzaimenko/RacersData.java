@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class RacersData {
     private static final String ABBREVIATIONS_FILE = "abbreviations.txt";
@@ -30,61 +31,55 @@ public class RacersData {
         return time.getTime();
     }
 
-    private void loadRacersData() throws IOException {
+    private Stream<String> readLinesFromFile(String filename) throws IOException {
+        InputStream is = RacingMain.class.getClassLoader().getResourceAsStream(filename);
 
-        InputStream is = RacingMain.class.getClassLoader().getResourceAsStream(RacersData.ABBREVIATIONS_FILE);
         if (is == null) {
-            throw new IOException("Resource file " + ABBREVIATIONS_FILE + " not found");
+            throw new IOException("Resource file " + filename + " not found");
         }
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
-            reader.lines()
-                    .map(line -> line.split("_"))
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        return reader.lines().onClose(() -> {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private void loadRacersData() throws IOException {
+        try (Stream<String> lines = readLinesFromFile(ABBREVIATIONS_FILE)) {
+            lines.map(line -> line.split("_"))
                     .forEach(parts -> racers.put(parts[0], new Racer(parts[0], parts[1], parts[2])));
         }
     }
 
     private void loadStartTime() throws IOException {
-
-        InputStream is = RacingMain.class.getClassLoader().getResourceAsStream(RacersData.START_TIME_FILE);
-        if (is == null) {
-            throw new IOException("Resource file " + START_TIME_FILE + " not found");
-        }
-
-        try (
-                BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
-            reader.lines()
-                    .forEach(line -> {
-                        String abbreviation = line.substring(0, 3);
-                        try {
-                            long startTime = convertTimeToLong(line.substring(3));
-                            racers.get(abbreviation).setStartTime(startTime);
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                    });
+        try (Stream<String> lines = readLinesFromFile(START_TIME_FILE)) {
+            lines.forEach(line -> {
+                String abbreviation = line.substring(0, 3);
+                try {
+                    long startTime = convertTimeToLong(line.substring(3));
+                    racers.get(abbreviation).setStartTime(startTime);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            });
         }
     }
 
     private void loadEndTime() throws IOException {
-
-        InputStream is = RacingMain.class.getClassLoader().getResourceAsStream(RacersData.END_TIME_FILE);
-        if (is == null) {
-            throw new IOException("Resource file " + END_TIME_FILE + " not found");
-        }
-
-        try (
-                BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
-            reader.lines()
-                    .forEach(line -> {
-                        String abbreviation = line.substring(0, 3);
-                        try {
-                            long endTime = convertTimeToLong(line.substring(3));
-                            racers.get(abbreviation).setEndTime(endTime);
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                    });
+        try (Stream<String> lines = readLinesFromFile(END_TIME_FILE)) {
+            lines.forEach(line -> {
+                String abbreviation = line.substring(0, 3);
+                try {
+                    long endTime = convertTimeToLong(line.substring(3));
+                    racers.get(abbreviation).setEndTime(endTime);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            });
         }
     }
 
