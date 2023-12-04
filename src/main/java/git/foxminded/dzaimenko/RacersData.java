@@ -31,17 +31,28 @@ public class RacersData {
     }
 
     private void loadRacersData() throws IOException {
-        try (InputStream is = RacingMain.class.getClassLoader().getResourceAsStream(RacersData.ABBREVIATIONS_FILE);
-             BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+
+        InputStream is = RacingMain.class.getClassLoader().getResourceAsStream(RacersData.ABBREVIATIONS_FILE);
+        if (is == null) {
+            throw new IOException("Resource file " + ABBREVIATIONS_FILE + " not found");
+        }
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
             reader.lines()
                     .map(line -> line.split("_"))
                     .forEach(parts -> racers.put(parts[0], new Racer(parts[0], parts[1], parts[2])));
         }
     }
 
-    private void loadStartTime() throws Exception {
-        try (InputStream is = RacingMain.class.getClassLoader().getResourceAsStream(RacersData.START_TIME_FILE);
-             BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+    private void loadStartTime() throws IOException {
+
+        InputStream is = RacingMain.class.getClassLoader().getResourceAsStream(RacersData.START_TIME_FILE);
+        if (is == null) {
+            throw new IOException("Resource file " + START_TIME_FILE + " not found");
+        }
+
+        try (
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
             reader.lines()
                     .forEach(line -> {
                         String abbreviation = line.substring(0, 3);
@@ -55,9 +66,15 @@ public class RacersData {
         }
     }
 
-    private void loadEndTime() throws Exception {
-        try (InputStream is = RacingMain.class.getClassLoader().getResourceAsStream(RacersData.END_TIME_FILE);
-             BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+    private void loadEndTime() throws IOException {
+
+        InputStream is = RacingMain.class.getClassLoader().getResourceAsStream(RacersData.END_TIME_FILE);
+        if (is == null) {
+            throw new IOException("Resource file " + END_TIME_FILE + " not found");
+        }
+
+        try (
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
             reader.lines()
                     .forEach(line -> {
                         String abbreviation = line.substring(0, 3);
@@ -78,7 +95,7 @@ public class RacersData {
             loadStartTime();
             loadEndTime();
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
