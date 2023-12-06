@@ -67,12 +67,13 @@ class RacerTest {
     @Test
     void getLapTimeShouldReturnCorrectValue() {
         Racer racer = new Racer("ABC", "Test Name", "Test Team");
-
         racer.setStartTime(10000);
         racer.setEndTime(15000);
-        long expected = 5000;
 
-        assertEquals(expected, racer.getLapTime());
+        long expected = 5000;
+        long actual = racer.getLapTime();
+
+        assertEquals(expected, actual);
     }
 
 }
