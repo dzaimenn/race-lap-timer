@@ -52,10 +52,10 @@ class RacerTest {
     @Test
     void setEndTimeBeforeStartTimeShouldThrowException() {
         Racer racer = new Racer("ABC", "Test Name", "Test Team");
-        racer.setStartTime(1000); // 1 second
+        racer.setStartTime(1000);
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            racer.setEndTime(500); // 0.5 seconds
+            racer.setEndTime(500);
         });
 
         String expected = "End time cannot be before start time";
