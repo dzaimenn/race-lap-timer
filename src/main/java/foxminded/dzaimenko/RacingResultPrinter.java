@@ -1,4 +1,4 @@
-package git.foxminded.dzaimenko;
+package foxminded.dzaimenko;
 
 import java.util.Comparator;
 import java.util.List;
