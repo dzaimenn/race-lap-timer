@@ -1,16 +1,19 @@
-package foxminded.dzaimenko;
+package foxminded.dzaimenko.services;
+
+import foxminded.dzaimenko.models.Racer;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 public class RacingResultPrinter {
 
     private int maxLengthNameRacer;
     private int maxLengthNameTeam;
 
-    public List<Racer> sortRacersByLapTime(Map<String, Racer> racers) {
-        return racers.values().stream()
+
+
+    private List<Racer> sortRacersByLapTime(List<Racer> racers) {
+        return racers.stream()
                 .sorted(Comparator.comparing(Racer::getLapTime))
                 .toList();
     }
@@ -39,7 +42,7 @@ public class RacingResultPrinter {
                 .orElse(0);
     }
 
-    public void printRacingResults(List<Racer> sortedRacers) {
+    private void printRacingResults(List<Racer> sortedRacers) {
         nameMaxLength(sortedRacers);
         teamMaxLength(sortedRacers);
 
@@ -49,13 +52,18 @@ public class RacingResultPrinter {
                     rank++,
                     racer.getNameRacer(),
                     racer.getTeamRacing(),
-                    formatLapTime(racer.getLapTime()));
+                    formatLapTime(racer.getLapTime().toMillis()));
             System.out.println(formattedOutput);
 
             if (rank == 16) {
                 System.out.println("-".repeat(70));
             }
         }
+    }
+
+    public void viewRacingResult(List<Racer> racers) {
+        List<Racer> sortedRacers = sortRacersByLapTime(racers);
+        printRacingResults(sortedRacers);
     }
 
 }
